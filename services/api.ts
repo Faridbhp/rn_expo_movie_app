@@ -19,7 +19,7 @@ export const fetchPopularMovies = async ({ query }: { query: string }) => {
         headers: TMDB_CONFIG.headers,
     });
 
-    if (response.ok) {
+    if (!response.ok) {
         // @ts-ignore
         throw new Error("Filed o fetch movies", response.statusText);
     }
