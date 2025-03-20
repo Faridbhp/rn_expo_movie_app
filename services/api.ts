@@ -7,7 +7,10 @@ export const TMDB_CONFIG = {
     },
 };
 
-export const fetchPopularMovies = async ({ query }: { query: string }) => {
+export const fetchPopularMovies = async ({ query = "" }: { query: string }) => {
+    if (query === "") {
+        query = "indonesia";
+    }
     const endpoint = query
         ? `${TMDB_CONFIG.BASE_URL}/search/movie?query=${encodeURIComponent(
               query

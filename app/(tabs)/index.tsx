@@ -24,7 +24,7 @@ export default function Index() {
         error: moviesError,
     } = useFetch(() =>
         fetchPopularMovies({
-            query: "indonesia",
+            query: "",
         })
     );
 
