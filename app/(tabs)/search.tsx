@@ -52,6 +52,18 @@ const Search = () => {
                 resizeMode="cover"
             />
 
+            <View className="w-full flex-row justify-center mt-20 items-center">
+                <Image source={icons.logo} className="w-12 h-10" />
+            </View>
+
+            <View className="my-5 mx-5">
+                <SearchBar
+                    placeholder="Search movies..."
+                    value={searchQuery}
+                    onChangeText={(text: string) => setSearchQuery(text)}
+                />
+            </View>
+
             <FlatList
                 data={movies}
                 renderItem={({ item }) => <MovieCard {...item} />}
@@ -66,20 +78,6 @@ const Search = () => {
                 contentContainerStyle={{ paddingBottom: 100 }}
                 ListHeaderComponent={
                     <>
-                        <View className="w-full flex-row justify-center mt-20 items-center">
-                            <Image source={icons.logo} className="w-12 h-10" />
-                        </View>
-
-                        <View className="my-5">
-                            <SearchBar
-                                placeholder="Search movies..."
-                                value={searchQuery}
-                                onChangeText={(text: string) =>
-                                    setSearchQuery(text)
-                                }
-                            />
-                        </View>
-
                         {moviesLoading && (
                             <ActivityIndicator
                                 size="large"
