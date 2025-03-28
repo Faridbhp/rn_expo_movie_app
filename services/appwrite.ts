@@ -2,7 +2,10 @@
 import { Client, Databases, ID, Query } from "react-native-appwrite";
 
 const DATABASE_ID = process.env.EXPO_PUBLIC_APPWIRTE_DATABASE_ID!;
-const COLLECTION_ID = process.env.EXPO_PUBLIC_APPWIRTE_COLLECTION_ID!;
+const COLLECTION_ID_METRICS =
+    process.env.EXPO_PUBLIC_APPWIRTE_COLLECTION_ID_METRICS!;
+const COLLECTION_ID_HISTORY =
+    process.env.EXPO_PUBLIC_APPWIRTE_COLLECTION_ID_HISTORY!;
 
 const client = new Client()
     .setEndpoint("https://cloud.appwrite.io/v1")
@@ -14,7 +17,7 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
     try {
         const result = await database.listDocuments(
             DATABASE_ID,
-            COLLECTION_ID,
+            COLLECTION_ID_METRICS,
             [Query.equal("searchTerm", query)]
         );
 
@@ -25,7 +28,7 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
             // if a document is found increment the seachCount field
             await database.updateDocument(
                 DATABASE_ID,
-                COLLECTION_ID,
+                COLLECTION_ID_METRICS,
                 exitingMovie.$id,
                 {
                     count: exitingMovie.count + 1,
@@ -36,7 +39,7 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
             // create a new document in Appwrite database ->
             await database.createDocument(
                 DATABASE_ID,
-                COLLECTION_ID,
+                COLLECTION_ID_METRICS,
                 ID.unique(),
                 {
                     searchTerm: query,
@@ -51,7 +54,6 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
         console.log("error", error);
         throw error;
     }
-    1;
 };
 
 export const getTrendingMovies = async (): Promise<
@@ -60,7 +62,7 @@ export const getTrendingMovies = async (): Promise<
     try {
         const result = await database.listDocuments(
             DATABASE_ID,
-            COLLECTION_ID,
+            COLLECTION_ID_METRICS,
             [Query.limit(5), Query.orderDesc("count")]
         );
 
@@ -68,5 +70,70 @@ export const getTrendingMovies = async (): Promise<
     } catch (error) {
         console.log("error", error);
         return undefined;
+    }
+};
+
+export const updateHistoryMovie = async (
+    query: string,
+    deviceId: string,
+    movie: MovieDetails
+) => {
+    try {
+        const result = await database.listDocuments(
+            DATABASE_ID,
+            COLLECTION_ID_HISTORY,
+            [Query.equal("device_id", deviceId), Query.equal("movie_id", query)]
+        );
+
+        // check if a record of that search has already been stored
+        if (result.documents.length > 0) {
+            const exitingMovie = result.documents[0];
+
+            // if a document is found update Updated time field
+            await database.updateDocument(
+                DATABASE_ID,
+                COLLECTION_ID_HISTORY,
+                exitingMovie.$id,
+                {
+                    updated_at: new Date().toISOString(),
+                }
+            );
+        } else {
+            // if no document is found
+            // create a new document in Appwrite database ->
+            await database.createDocument(
+                DATABASE_ID,
+                COLLECTION_ID_HISTORY,
+                ID.unique(),
+                {
+                    movie_id: query, // query // movie.id
+                    title: movie.title,
+                    poster_url: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+                    updated_at: new Date().toISOString(),
+                    device_id: deviceId,
+                }
+            );
+        }
+    } catch (error) {
+        console.log("error", error);
+        throw error;
+    }
+};
+
+export const getAllHistoryMovies = async ({
+    query = "",
+}: {
+    query: string;
+}): Promise<HistoryMovie[] | undefined> => {
+    try {
+        const result = await database.listDocuments(
+            DATABASE_ID,
+            COLLECTION_ID_HISTORY,
+            [Query.equal("device_id", query), Query.orderDesc("updated_at")]
+        );
+        return result.documents as unknown as HistoryMovie[];
+    } catch (error) {
+        console.log("Error fetching history movies:", error);
+        throw error;
     }
 };

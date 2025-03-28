@@ -75,3 +75,13 @@ interface TrendingCardProps {
   movie: TrendingMovie;
   index: number;
 }
+interface HistoryCardProps {
+  movie: HistoryMovie;
+}
+
+interface HistoryMovie {
+  movie_id: number;
+  title: string;
+  poster_url: string;
+  updated_at: string;
+}

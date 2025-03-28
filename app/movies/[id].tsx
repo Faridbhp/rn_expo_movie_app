@@ -1,9 +1,11 @@
 import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import useFetch from "@/services/useFetch";
 import { fetchMovieDetails } from "@/services/api";
 import { icons } from "@/constants/icons";
+import { getDeviceId } from "@/utils/device";
+import { updateHistoryMovie } from "@/services/appwrite";
 
 interface MovieInfoProps {
     label: string;
@@ -21,10 +23,22 @@ const MovieInfo = ({ label, value }: MovieInfoProps) => (
 
 const MovieDetails = () => {
     const { id } = useLocalSearchParams();
+    const deviceId = getDeviceId();
 
     const { data: movie, loading } = useFetch(() =>
         fetchMovieDetails(id as string)
     );
+
+    useEffect(() => {
+        const updateMovieHistory = async () => {
+            if (id && movie) {
+                console.log("Updating history for movie_id:", id);
+                await updateHistoryMovie(String(id), String(deviceId), movie);
+            }
+        };
+
+        updateMovieHistory();
+    }, [id, movie]);
 
     return (
         <View className="bg-primary flex-1">
