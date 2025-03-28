@@ -1,14 +1,10 @@
 import { View, Text, Image, FlatList } from "react-native";
 import React, { useEffect } from "react";
-import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import useFetch from "@/services/useFetch";
-import { fetchPopularMovies } from "@/services/api";
-import MovieCard from "../components/MovieCard";
 import { getAllHistoryMovies } from "@/services/appwrite";
-import TrendingCard from "../components/TrendingCard";
 import HistoryCard from "../components/HistoryCard";
 import { getDeviceId } from "@/utils/device";
 import { usePathname } from "expo-router";

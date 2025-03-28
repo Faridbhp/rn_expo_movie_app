@@ -7,7 +7,7 @@ import {
     View,
 } from "react-native";
 import "../global.css";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { images } from "@/constants/images";
 import { icons } from "@/constants/icons";
 import SearchBar from "../components/SearchBar";

@@ -32,7 +32,6 @@ const MovieDetails = () => {
     useEffect(() => {
         const updateMovieHistory = async () => {
             if (id && movie) {
-                console.log("Updating history for movie_id:", id);
                 await updateHistoryMovie(String(id), String(deviceId), movie);
             }
         };

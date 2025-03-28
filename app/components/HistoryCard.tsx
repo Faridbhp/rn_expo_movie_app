@@ -1,14 +1,12 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { Text, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
-import MaskedView from "@react-native-masked-view/masked-view";
-import { images } from "@/constants/images";
 import { convertToLocalTime } from "@/utils/convertToLocalTime";
 
 const HistoryCard = ({
     movie: { movie_id, poster_url, title, updated_at },
 }: HistoryCardProps) => {
-    console.log("updated_at", updated_at);
+    
     return (
         <Link href={`/movies/${movie_id}`} asChild>
             <TouchableOpacity className="w-[30%]">
