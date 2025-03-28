@@ -71,7 +71,7 @@ const Search = () => {
                 className="px-5"
                 numColumns={3}
                 columnWrapperStyle={{
-                    justifyContent: "center",
+                    justifyContent: "flex-start",
                     gap: 16,
                     marginVertical: 16,
                 }}

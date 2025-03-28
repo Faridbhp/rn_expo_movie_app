@@ -41,10 +41,13 @@ export default function Index() {
             <Image source={images.bg} className="absolute w-full z-0" />
 
             <Image source={icons.logo} className="w-12 h-10 mt-20 mx-auto" />
+            <Text className="text-sm text-white opacity-30 text-center">
+                V.{process.env.EXPO_PUBLIC_VERSION ?? "0"}
+            </Text>
             <View className="my-5 mx-5">
                 <SearchBar
                     onPress={() => router.push("/search")}
-                    placeholder="Search"
+                    placeholder="Search movies..."
                 />
             </View>
 
@@ -66,7 +69,7 @@ export default function Index() {
                     className="px-5"
                     numColumns={3}
                     columnWrapperStyle={{
-                        justifyContent: "center",
+                        justifyContent: "flex-start",
                         gap: 16,
                         marginVertical: 16,
                     }}
