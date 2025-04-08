@@ -107,8 +107,8 @@ export const updateHistoryMovie = async (
                 ID.unique(),
                 {
                     movie_id: query, // query // movie.id
-                    title: movie.title,
-                    poster_url: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+                    title: movie?.title,
+                    poster_url: `https://image.tmdb.org/t/p/w500${movie?.poster_path}`,
                     updated_at: new Date().toISOString(),
                     device_id: deviceId,
                 }
@@ -134,6 +134,90 @@ export const getAllHistoryMovies = async ({
         return result.documents as unknown as HistoryMovie[];
     } catch (error) {
         console.log("Error fetching history movies:", error);
+        throw error;
+    }
+};
+
+export const getAllSavedData = async ({
+    query = "",
+}: {
+    query: string;
+}): Promise<HistoryMovie[] | undefined> => {
+    try {
+        const result = await database.listDocuments(
+            DATABASE_ID,
+            COLLECTION_ID_HISTORY,
+            [
+                Query.equal("is_saved", true),
+                Query.equal("device_id", query),
+                Query.orderDesc("updated_at"),
+            ]
+        );
+        return result.documents as unknown as HistoryMovie[];
+    } catch (error) {
+        console.log("Error fetching history movies:", error);
+        throw error;
+    }
+};
+
+export const getOneHistoryMovie = async ({
+    movieId = "",
+    deviceId = "",
+}: {
+    movieId: string;
+    deviceId: string;
+}): Promise<HistoryMovie | undefined> => {
+    try {
+        const result = await database.listDocuments(
+            DATABASE_ID,
+            COLLECTION_ID_HISTORY,
+            [
+                Query.equal("device_id", deviceId),
+                Query.equal("movie_id", movieId),
+            ]
+        );
+        console.log(result.documents);
+        if (result.documents.length > 0) {
+            return result.documents[0] as unknown as HistoryMovie;
+        }
+
+        return undefined;
+    } catch (error) {
+        console.log("Error fetching history movies:", error);
+        throw error;
+    }
+};
+
+export const savedMovie = async (
+    query: string,
+    device_id: string,
+    is_saved: Boolean
+) => {
+    try {
+      
+        const result = await database.listDocuments(
+            DATABASE_ID,
+            COLLECTION_ID_HISTORY,
+            [
+                Query.equal("device_id", device_id),
+                Query.equal("movie_id", query),
+            ]
+        );
+
+        if (result.documents.length > 0) {
+            const exitingMovie = result.documents[0];
+            await database.updateDocument(
+                DATABASE_ID,
+                COLLECTION_ID_HISTORY,
+                exitingMovie.$id,
+                {
+                    updated_at: new Date().toISOString(),
+                    is_saved: is_saved,
+                }
+            );
+        }
+    } catch (error) {
+        console.log("error", error);
         throw error;
     }
 };

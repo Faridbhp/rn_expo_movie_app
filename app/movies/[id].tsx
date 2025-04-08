@@ -1,11 +1,16 @@
 import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import useFetch from "@/services/useFetch";
 import { fetchMovieDetails } from "@/services/api";
 import { icons } from "@/constants/icons";
 import { getDeviceId } from "@/utils/device";
-import { updateHistoryMovie } from "@/services/appwrite";
+import {
+    getOneHistoryMovie,
+    savedMovie,
+    updateHistoryMovie,
+} from "@/services/appwrite";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 interface MovieInfoProps {
     label: string;
@@ -29,15 +34,42 @@ const MovieDetails = () => {
         fetchMovieDetails(id as string)
     );
 
+    const [isSaved, setIsSaved] = useState<Boolean>(false);
+
+    const { data: dataAppwrite, loading: loadingOneHistory } = useFetch(() =>
+        getOneHistoryMovie({ deviceId: String(deviceId), movieId: String(id) })
+    );
+
     useEffect(() => {
         const updateMovieHistory = async () => {
-            if (id && movie) {
+            if (!loadingOneHistory && id && movie) {
                 await updateHistoryMovie(String(id), String(deviceId), movie);
             }
         };
 
         updateMovieHistory();
-    }, [id, movie]);
+    }, [loadingOneHistory, id, movie, deviceId]);
+
+    useEffect(() => {
+        if (!loadingOneHistory && dataAppwrite) {
+            console.log("dataAppwrite.is_saved", dataAppwrite.is_saved);
+            setIsSaved(dataAppwrite.is_saved);
+        }
+    }, [dataAppwrite, loadingOneHistory]);
+
+    const saveData = async (status: Boolean) => {
+        setIsSaved(status);
+
+        savedMovie(String(id), String(deviceId), status);
+    };
+
+    if (loadingOneHistory) {
+        return (
+            <View>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
 
     return (
         <View className="bg-primary flex-1">
@@ -50,6 +82,17 @@ const MovieDetails = () => {
                         className="w-full h-[550px]"
                         resizeMode="stretch"
                     />
+                    <TouchableOpacity
+                        className="flex flex-1 items-end -mt-6 mr-5"
+                        onPress={() => saveData(!isSaved)}>
+                        <View className="bg-black items-center justify-center border-2  w-12 h-12 border-white rounded-md">
+                            <MaterialIcons
+                                name={isSaved ? `save-as` : `save-alt`}
+                                size={25}
+                                color="white"
+                            />
+                        </View>
+                    </TouchableOpacity>
                 </View>
                 <View className="flex-col items-start justify-center mt-5 px-5">
                     <Text className="text-white font-bold text-xl">

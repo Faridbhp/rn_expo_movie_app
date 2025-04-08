@@ -84,4 +84,5 @@ interface HistoryMovie {
   title: string;
   poster_url: string;
   updated_at: string;
+  is_saved: boolean;
 }
