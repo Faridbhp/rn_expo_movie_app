@@ -37,7 +37,7 @@ const Saved = () => {
         <View className="flex-1 bg-primary">
             <Image source={images.bg} className="absolute w-full z-0" />
             <View className="flex-1 px-5 mt-20">
-                <Text className="text-2xl text-white font-bold ">History</Text>
+                <Text className="text-2xl text-white font-bold ">Saved</Text>
                 <FlatList
                     data={historyData}
                     renderItem={({ item }) => <HistoryCard movie={item} />}
