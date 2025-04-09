@@ -47,128 +47,102 @@ export default function Index() {
                     placeholder="Search movies..."
                 />
             </View>
+            <FlatList
+                data={moviesLoading ? Array(9).fill(null) : movies}
+                renderItem={({ item }) =>
+                    moviesLoading ? (
+                        <MovieCardSkeleton />
+                    ) : (
+                        <MovieCard {...item} />
+                    )
+                }
+                keyExtractor={(item, index) =>
+                    moviesLoading ? `skeleton-${index}` : item.id.toString()
+                }
+                className="px-5"
+                numColumns={3}
+                columnWrapperStyle={{
+                    justifyContent: "flex-start",
+                    gap: 16,
+                    marginVertical: 16,
+                }}
+                contentContainerStyle={{ paddingBottom: 100 }}
+                ListHeaderComponent={
+                    <View className="flex-1">
+                        <TrendingSection
+                            data={trendingMovies}
+                            loading={trendingLoading}
+                            error={trendingError}
+                        />
 
-            {moviesLoading || trendingLoading ? (
-                <FlatList
-                    data={Array(9).fill(null)}
-                    renderItem={() => <MovieCardSkeleton />}
-                    keyExtractor={(item, index) => `skeleton-${index}`}
-                    className="px-5"
-                    numColumns={3}
-                    columnWrapperStyle={{
-                        justifyContent: "flex-start",
-                        gap: 16,
-                        marginVertical: 16,
-                    }}
-                    contentContainerStyle={{ paddingBottom: 100 }}
-                    ListHeaderComponent={
-                        <View className="flex-1">
-                            <View>
-                                <Text className="text-lg text-white font-bold mb-3">
-                                    Trending Movies
-                                </Text>
-
-                                <FlatList
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}
-                                    ItemSeparatorComponent={() => (
-                                        <View className="w-5" />
-                                    )}
-                                    className="mb4 mt-3"
-                                    data={Array(4).fill(null)}
-                                    renderItem={({ item, index }) => (
-                                        <TrendingCardSkeleton index={index} />
-                                    )}
-                                    keyExtractor={(item, index) =>
-                                        `skeletonHorizontal-${index}`
-                                    }
-                                />
-                            </View>
-
-                            <Text className="text-lg text-white font-bold mt-5 mb-3">
-                                Latest Movies
+                        <Text className="text-lg text-white font-bold mt-5 mb-3">
+                            Latest Movies
+                        </Text>
+                    </View>
+                }
+                ListEmptyComponent={
+                    !moviesError ? (
+                        <View className="mt-10 px-5">
+                            <Text className="text-center text-gray-500 text-xl">
+                                No movies found
                             </Text>
                         </View>
-                    }
-                />
-            ) : (
-                <FlatList
-                    data={movies}
-                    renderItem={({ item }) => <MovieCard {...item} />}
-                    keyExtractor={(item) => item.id.toString()}
-                    className="px-5"
-                    numColumns={3}
-                    columnWrapperStyle={{
-                        justifyContent: "flex-start",
-                        gap: 16,
-                        marginVertical: 16,
-                    }}
-                    contentContainerStyle={{ paddingBottom: 100 }}
-                    ListHeaderComponent={
-                        <View className="flex-1">
-                            {trendingMovies && (
-                                <View>
-                                    <Text className="text-lg text-white font-bold mb-3">
-                                        Trending Movies
-                                    </Text>
-
-                                    <FlatList
-                                        horizontal
-                                        showsHorizontalScrollIndicator={false}
-                                        ItemSeparatorComponent={() => (
-                                            <View className="w-5" />
-                                        )}
-                                        className="mb4 mt-3"
-                                        data={trendingMovies}
-                                        renderItem={({ item, index }) => (
-                                            <TrendingCard
-                                                movie={item}
-                                                index={index}
-                                            />
-                                        )}
-                                        keyExtractor={(item) =>
-                                            `${item.movie_id.toString()}-${
-                                                item.searchTerm
-                                            }`
-                                        }
-                                        ListEmptyComponent={
-                                            !trendingError ? (
-                                                <View className="mt-10 px-5">
-                                                    <Text className="text-center text-gray-500 text-xl">
-                                                        No movies found
-                                                    </Text>
-                                                </View>
-                                            ) : (
-                                                <Text className="text-lg text-red-500 text-center">
-                                                    Error:{" "}
-                                                    {trendingError?.message}
-                                                </Text>
-                                            )
-                                        }
-                                    />
-                                </View>
-                            )}
-
-                            <Text className="text-lg text-white font-bold mt-5 mb-3">
-                                Latest Movies
-                            </Text>
-                        </View>
-                    }
-                    ListEmptyComponent={
-                        !moviesError ? (
-                            <View className="mt-10 px-5">
-                                <Text className="text-center text-gray-500 text-xl">
-                                    No movies found
-                                </Text>
-                            </View>
-                        ) : (
-                            <Text className="text-lg text-red-500 text-center">
-                                Error: {moviesError?.message}
-                            </Text>
-                        )
-                    }
-                />
-            )}
+                    ) : (
+                        <Text className="text-lg text-red-500 text-center">
+                            Error: {moviesError?.message}
+                        </Text>
+                    )
+                }
+            />
         </View>
     );
 }
+
+const TrendingSection = ({
+    data,
+    loading,
+    error,
+}: {
+    data: any[] | null | undefined;
+    loading: boolean;
+    error: Error | null;
+}) => (
+    <View>
+        <Text className="text-lg text-white font-bold mb-3">
+            Trending Movies
+        </Text>
+
+        <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={() => <View className="w-5" />}
+            className="mb-4 mt-3"
+            data={loading ? Array(4).fill(null) : data}
+            renderItem={({ item, index }) =>
+                loading ? (
+                    <TrendingCardSkeleton index={index} />
+                ) : (
+                    <TrendingCard movie={item} index={index} />
+                )
+            }
+            keyExtractor={(item, index) =>
+                loading
+                    ? `skeletonHorizontal-${index}`
+                    : `${item.movie_id.toString()}-${item.searchTerm}`
+            }
+            ListEmptyComponent={
+                !error ? (
+                    <View className="mt-10 px-5">
+                        <Text className="text-center text-gray-500 text-xl">
+                            No movies found
+                        </Text>
+                    </View>
+                ) : (
+                    <Text className="text-lg text-red-500 text-center">
+                        Error: {error?.message}
+                    </Text>
+                )
+            }
+        />
+    </View>
+);
