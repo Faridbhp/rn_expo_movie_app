@@ -1,10 +1,10 @@
-import { View, Text, Image, FlatList } from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
 import React, { useCallback, useEffect } from "react";
 import { icons } from "@/constants/icons";
 import { useFocusEffect, usePathname } from "expo-router";
 import { getDeviceId } from "@/utils/device";
 import useFetch from "@/services/useFetch";
-import { getAllHistoryMovies, getAllSavedData } from "@/services/appwrite";
+import { deleteSaveMovie, getAllSavedData } from "@/services/appwrite";
 import { images } from "@/constants/images";
 import HistoryCard from "../components/HistoryCard";
 
@@ -22,6 +22,7 @@ const Saved = () => {
             query: String(deviceId),
         })
     );
+
     useEffect(() => {
         console.log("historyData", historyLoading);
     }, [historyLoading]);
@@ -33,11 +34,25 @@ const Saved = () => {
         }, [])
     );
 
+    const handleClear = async () => {
+        await deleteSaveMovie(String(deviceId), 20);
+        loadHistory();
+    };
+
     return (
         <View className="flex-1 bg-primary">
             <Image source={images.bg} className="absolute w-full z-0" />
-            <View className="flex-1 px-5 mt-20">
-                <Text className="text-2xl text-white font-bold ">Saved</Text>
+            <Image source={icons.logo} className="w-12 h-10 mt-20 mx-auto" />
+
+            <View className="flex-1 px-5 mt-5">
+                <View className="flex-row justify-between mt-2">
+                    <Text className="text-2xl text-white font-bold">Saved</Text>
+                    <TouchableOpacity onPress={handleClear}>
+                        <Text className="text-lg text-white font-bold">
+                            Clear
+                        </Text>
+                    </TouchableOpacity>
+                </View>
                 <FlatList
                     data={historyData}
                     renderItem={({ item }) => <HistoryCard movie={item} />}
@@ -60,7 +75,7 @@ const Saved = () => {
                                 Save
                             </Text>
                         </View>
-                    }                    
+                    }
                 />
             </View>
         </View>

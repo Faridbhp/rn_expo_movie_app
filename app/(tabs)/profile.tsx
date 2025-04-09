@@ -1,10 +1,10 @@
-import { View, Text, Image, FlatList } from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
 import { images } from "@/constants/images";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import useFetch from "@/services/useFetch";
-import { getAllHistoryMovies } from "@/services/appwrite";
+import { deleteHistoryMovie, getAllHistoryMovies } from "@/services/appwrite";
 import HistoryCard from "../components/HistoryCard";
 import { getDeviceId } from "@/utils/device";
 import { usePathname } from "expo-router";
@@ -28,6 +28,11 @@ const Profile = () => {
         loadHistory();
     }, [pathname]);
 
+    const handleClear = async () => {
+        await deleteHistoryMovie(String(deviceId), 20);
+        loadHistory();
+    };
+
     return (
         <View className="flex-1 bg-primary">
             <Image source={images.bg} className="absolute w-full z-0" />
@@ -48,9 +53,16 @@ const Profile = () => {
                 </View>
             </View>
             <View className="flex-1 px-5">
-                <Text className="text-lg text-white font-bold mt-2">
-                    History
-                </Text>
+                <View className="flex-row justify-between mt-2">
+                    <Text className="text-2xl text-white font-bold">
+                        History
+                    </Text>
+                    <TouchableOpacity onPress={handleClear}>
+                        <Text className="text-lg text-white font-bold">
+                            Clear
+                        </Text>
+                    </TouchableOpacity>
+                </View>
                 <FlatList
                     data={historyData}
                     renderItem={({ item }) => <HistoryCard movie={item} />}

@@ -2,7 +2,6 @@ import {
     ActivityIndicator,
     FlatList,
     Image,
-    ScrollView,
     Text,
     View,
 } from "react-native";
@@ -41,9 +40,11 @@ export default function Index() {
             <Image source={images.bg} className="absolute w-full z-0" />
 
             <Image source={icons.logo} className="w-12 h-10 mt-20 mx-auto" />
-            <Text className="text-sm text-white opacity-30 text-center">
-                V.{process.env.EXPO_PUBLIC_VERSION ?? "0"}
-            </Text>
+            <View className="absolute mt-5 ml-5 border-white border p-1">
+                <Text className="text-sm text-white text-center">
+                    V.{process.env.EXPO_PUBLIC_VERSION ?? "0"}
+                </Text>
+            </View>
             <View className="my-5 mx-5">
                 <SearchBar
                     onPress={() => router.push("/search")}

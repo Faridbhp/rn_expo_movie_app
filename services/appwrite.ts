@@ -176,7 +176,7 @@ export const getOneHistoryMovie = async ({
                 Query.equal("movie_id", movieId),
             ]
         );
-        console.log(result.documents);
+
         if (result.documents.length > 0) {
             return result.documents[0] as unknown as HistoryMovie;
         }
@@ -194,7 +194,6 @@ export const savedMovie = async (
     is_saved: Boolean
 ) => {
     try {
-      
         const result = await database.listDocuments(
             DATABASE_ID,
             COLLECTION_ID_HISTORY,
@@ -220,4 +219,63 @@ export const savedMovie = async (
         console.log("error", error);
         throw error;
     }
+};
+
+export const deleteHistoryMovie = async (
+    device_id: string,
+    limit: number = 1
+) => {
+    try {
+        const response = await database.listDocuments(
+            DATABASE_ID,
+            COLLECTION_ID_HISTORY,
+            [
+                Query.equal("device_id", device_id),
+                Query.limit(limit),
+                Query.orderDesc("updated_at"),
+            ]
+        );
+        const documents = response.documents;
+
+        if (documents.length > 0) {
+            for (const doc of documents) {
+                await database.deleteDocument(
+                    DATABASE_ID,
+                    COLLECTION_ID_HISTORY,
+                    doc.$id
+                );
+                console.log("deleted ", doc.$id);
+            }
+        }
+    } catch (error) {}
+};
+
+export const deleteSaveMovie = async (device_id: string, limit: number = 1) => {
+    try {
+        const response = await database.listDocuments(
+            DATABASE_ID,
+            COLLECTION_ID_HISTORY,
+            [
+                Query.equal("device_id", device_id),
+                Query.limit(limit),
+                Query.orderDesc("updated_at"),
+            ]
+        );
+        const documents = response.documents;
+
+        if (documents.length > 0) {
+            for (const doc of documents) {
+                await database.updateDocument(
+                    DATABASE_ID,
+                    COLLECTION_ID_HISTORY,
+                    doc.$id,
+                    {
+                        updated_at: new Date().toISOString(),
+                        is_saved: false,
+                    }
+                );
+                console.log("updated ", doc.$id);
+            }
+        }
+    } catch (error) {}
 };
