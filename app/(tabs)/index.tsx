@@ -1,10 +1,4 @@
-import {
-    ActivityIndicator,
-    FlatList,
-    Image,
-    Text,
-    View,
-} from "react-native";
+import { FlatList, Image, Text, View } from "react-native";
 import "../global.css";
 import { useRouter } from "expo-router";
 import { images } from "@/constants/images";
@@ -15,6 +9,8 @@ import { fetchPopularMovies } from "@/services/api";
 import MovieCard from "../components/MovieCard";
 import { getTrendingMovies } from "@/services/appwrite";
 import TrendingCard from "../components/TrendingCard";
+import MovieCardSkeleton from "../components/MovieCard_Skeleton";
+import TrendingCardSkeleton from "../components/TrendingCard_Skeleton";
 
 export default function Index() {
     const router = useRouter();
@@ -52,16 +48,49 @@ export default function Index() {
                 />
             </View>
 
-            {moviesLoading || trendingLoading ? (
-                <ActivityIndicator
-                    size="large"
-                    color="#0000ff"
-                    className="mt-10 self-center"
+            {!moviesLoading || trendingLoading ? (
+                <FlatList
+                    data={Array(9).fill(null)}
+                    renderItem={() => <MovieCardSkeleton />}
+                    keyExtractor={(item, index) => `skeleton-${index}`}
+                    className="px-5"
+                    numColumns={3}
+                    columnWrapperStyle={{
+                        justifyContent: "flex-start",
+                        gap: 16,
+                        marginVertical: 16,
+                    }}
+                    contentContainerStyle={{ paddingBottom: 100 }}
+                    ListHeaderComponent={
+                        <View className="flex-1">
+                            <View>
+                                <Text className="text-lg text-white font-bold mb-3">
+                                    Trending Movies
+                                </Text>
+
+                                <FlatList
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                    ItemSeparatorComponent={() => (
+                                        <View className="w-5" />
+                                    )}
+                                    className="mb4 mt-3"
+                                    data={Array(4).fill(null)}
+                                    renderItem={({ item, index }) => (
+                                        <TrendingCardSkeleton index={index} />
+                                    )}
+                                    keyExtractor={(item, index) =>
+                                        `skeletonHorizontal-${index}`
+                                    }
+                                />
+                            </View>
+
+                            <Text className="text-lg text-white font-bold mt-5 mb-3">
+                                Latest Movies
+                            </Text>
+                        </View>
+                    }
                 />
-            ) : moviesError || trendingError ? (
-                <Text className="text-lg text-red-500 text-center">
-                    Error: {moviesError?.message || trendingError?.message}
-                </Text>
             ) : (
                 <FlatList
                     data={movies}
@@ -102,6 +131,20 @@ export default function Index() {
                                                 item.searchTerm
                                             }`
                                         }
+                                        ListEmptyComponent={
+                                            !trendingError ? (
+                                                <View className="mt-10 px-5">
+                                                    <Text className="text-center text-gray-500 text-xl">
+                                                        No movies found
+                                                    </Text>
+                                                </View>
+                                            ) : (
+                                                <Text className="text-lg text-red-500 text-center">
+                                                    Error:{" "}
+                                                    {trendingError?.message}
+                                                </Text>
+                                            )
+                                        }
                                     />
                                 </View>
                             )}
@@ -110,6 +153,19 @@ export default function Index() {
                                 Latest Movies
                             </Text>
                         </View>
+                    }
+                    ListEmptyComponent={
+                        !moviesError ? (
+                            <View className="mt-10 px-5">
+                                <Text className="text-center text-gray-500 text-xl">
+                                    No movies found
+                                </Text>
+                            </View>
+                        ) : (
+                            <Text className="text-lg text-red-500 text-center">
+                                Error: {moviesError?.message}
+                            </Text>
+                        )
                     }
                 />
             )}
