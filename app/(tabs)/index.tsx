@@ -48,7 +48,7 @@ export default function Index() {
                 />
             </View>
 
-            {!moviesLoading || trendingLoading ? (
+            {moviesLoading || trendingLoading ? (
                 <FlatList
                     data={Array(9).fill(null)}
                     renderItem={() => <MovieCardSkeleton />}
