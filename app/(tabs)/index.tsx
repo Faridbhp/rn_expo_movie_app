@@ -11,14 +11,17 @@ import { getTrendingMovies } from "@/services/appwrite";
 import TrendingCard from "../components/TrendingCard";
 import MovieCardSkeleton from "../components/MovieCard_Skeleton";
 import TrendingCardSkeleton from "../components/TrendingCard_Skeleton";
+import { useState } from "react";
 
 export default function Index() {
     const router = useRouter();
+    const [refreshingMovies, setRefreshingMovies] = useState(false);
 
     const {
         data: movies,
         loading: moviesLoading,
         error: moviesError,
+        refetch: loadPopulerMovies,
     } = useFetch(() =>
         fetchPopularMovies({
             query: "",
@@ -29,15 +32,32 @@ export default function Index() {
         data: trendingMovies,
         loading: trendingLoading,
         error: trendingError,
+        refetch: loadTrendingMovies,
     } = useFetch(getTrendingMovies);
+
+    const loadingPopularMovie = moviesLoading || refreshingMovies;
+    const loadingTrendingMovie = trendingLoading || refreshingMovies;
+
+    const handleRefreshPopularMovie = async () => {
+        try {
+            setRefreshingMovies(true);
+            await loadPopulerMovies();
+            await loadTrendingMovies();
+        } catch (error) {
+            console.error("Refresh error:", error);
+        } finally {
+            setRefreshingMovies(false);
+        }
+    };
 
     return (
         <View className="flex-1 bg-primary">
             <Image source={images.bg} className="absolute w-full z-0" />
 
             <Image source={icons.logo} className="w-12 h-10 mt-20 mx-auto" />
-            <View className="absolute mt-5 ml-5 border-white border p-1">
-                <Text className="text-sm text-white text-center">
+            <View className="absolute mt-5 ml-5 border-white border rounded-md p-1 items-center justify-center">
+                <View className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
+                <Text className="text-sm text-white text-center font-bold">
                     V.{process.env.EXPO_PUBLIC_VERSION ?? "0"}
                 </Text>
             </View>
@@ -48,16 +68,20 @@ export default function Index() {
                 />
             </View>
             <FlatList
-                data={moviesLoading ? Array(9).fill(null) : movies}
+                onRefresh={handleRefreshPopularMovie}
+                refreshing={refreshingMovies}
+                data={loadingPopularMovie ? Array(9).fill(null) : movies}
                 renderItem={({ item }) =>
-                    moviesLoading ? (
+                    loadingPopularMovie ? (
                         <MovieCardSkeleton />
                     ) : (
                         <MovieCard {...item} />
                     )
                 }
                 keyExtractor={(item, index) =>
-                    moviesLoading ? `skeleton-${index}` : item.id.toString()
+                    loadingPopularMovie
+                        ? `skeleton-${index}`
+                        : item.id.toString()
                 }
                 className="px-5"
                 numColumns={3}
@@ -71,7 +95,7 @@ export default function Index() {
                     <View className="flex-1">
                         <TrendingSection
                             data={trendingMovies}
-                            loading={trendingLoading}
+                            loading={loadingTrendingMovie}
                             error={trendingError}
                         />
 
