@@ -52,7 +52,7 @@ const MovieDetails = () => {
 
     useEffect(() => {
         if (!loadingOneHistory && dataAppwrite) {
-            console.log("dataAppwrite.is_saved", dataAppwrite.is_saved);
+            // console.log("dataAppwrite.is_saved", dataAppwrite.is_saved);
             setIsSaved(dataAppwrite.is_saved);
         }
     }, [dataAppwrite, loadingOneHistory]);
@@ -65,7 +65,7 @@ const MovieDetails = () => {
 
     if (loadingOneHistory) {
         return (
-            <View>
+            <View className="bg-primary flex-1 justify-center items-center">
                 <Text>Loading...</Text>
             </View>
         );

@@ -23,13 +23,9 @@ const Saved = () => {
         })
     );
 
-    useEffect(() => {
-        console.log("historyData", historyLoading);
-    }, [historyLoading]);
-
     useFocusEffect(
         useCallback(() => {
-            console.log("path", pathname);
+            // console.log("path", pathname);
             loadHistory();
         }, [])
     );
