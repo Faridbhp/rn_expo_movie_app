@@ -1,5 +1,5 @@
-import "../../global.css";
 import { FlatList, Image, Text, View } from "react-native";
+import "../global.css";
 import { useRouter } from "expo-router";
 import { images } from "@/src/constants/images";
 import { icons } from "@/src/constants/icons";
