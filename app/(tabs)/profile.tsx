@@ -1,12 +1,12 @@
 import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
-import { images } from "@/src/constants/images";
+import { images } from "@/constants/images";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import useFetch from "@/src/services/useFetch";
-import { deleteHistoryMovie, getAllHistoryMovies } from "@/src/services/appwrite";
+import useFetch from "@/services/useFetch";
+import { deleteHistoryMovie, getAllHistoryMovies } from "@/services/appwrite";
 import HistoryCard from "../components/HistoryCard";
-import { getDeviceId } from "@/src/utils/device";
+import { getDeviceId } from "@/utils/device";
 import { usePathname } from "expo-router";
 
 const Profile = () => {

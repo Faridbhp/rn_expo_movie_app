@@ -1,15 +1,15 @@
 import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import useFetch from "@/src/services/useFetch";
-import { fetchMovieDetails } from "@/src/services/api";
-import { icons } from "@/src/constants/icons";
-import { getDeviceId } from "@/src/utils/device";
+import useFetch from "@/services/useFetch";
+import { fetchMovieDetails } from "@/services/api";
+import { icons } from "@/constants/icons";
+import { getDeviceId } from "@/utils/device";
 import {
     getOneHistoryMovie,
     savedMovie,
     updateHistoryMovie,
-} from "@/src/services/appwrite";
+} from "@/services/appwrite";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 interface MovieInfoProps {

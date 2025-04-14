@@ -1,13 +1,13 @@
 import { FlatList, Image, Text, View } from "react-native";
 import "../global.css";
 import { useRouter } from "expo-router";
-import { images } from "@/src/constants/images";
-import { icons } from "@/src/constants/icons";
+import { images } from "@/constants/images";
+import { icons } from "@/constants/icons";
 import SearchBar from "../components/SearchBar";
-import useFetch from "@/src/services/useFetch";
-import { fetchPopularMovies } from "@/src/services/api";
+import useFetch from "@/services/useFetch";
+import { fetchPopularMovies } from "@/services/api";
 import MovieCard from "../components/MovieCard";
-import { getTrendingMovies } from "@/src/services/appwrite";
+import { getTrendingMovies } from "@/services/appwrite";
 import TrendingCard from "../components/TrendingCard";
 import MovieCardSkeleton from "../components/MovieCard_Skeleton";
 import TrendingCardSkeleton from "../components/TrendingCard_Skeleton";
