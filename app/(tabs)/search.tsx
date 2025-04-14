@@ -1,12 +1,12 @@
 import { View, Text, Image, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
-import { images } from "@/constants/images";
+import { images } from "@/src/constants/images";
 import MovieCard from "../components/MovieCard";
-import useFetch from "@/services/useFetch";
-import { fetchPopularMovies } from "@/services/api";
-import { icons } from "@/constants/icons";
+import useFetch from "@/src/services/useFetch";
+import { fetchPopularMovies } from "@/src/services/api";
+import { icons } from "@/src/constants/icons";
 import SearchBar from "../components/SearchBar";
-import { updateSearchCount } from "@/services/appwrite";
+import { updateSearchCount } from "@/src/services/appwrite";
 import MovieCardSkeleton from "../components/MovieCard_Skeleton";
 
 const Search = () => {
