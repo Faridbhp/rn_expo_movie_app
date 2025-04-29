@@ -5,7 +5,7 @@ import { images } from "@/constants/images";
 import { icons } from "@/constants/icons";
 
 const TabIcon = ({ focused, icon, title }: any) => {
-                <Image source={icon} tintColor="#151312" className='size-5' />
+
     return (
         <View className="flex flex-col items-center justify-cente">
             <View
@@ -19,8 +19,8 @@ const TabIcon = ({ focused, icon, title }: any) => {
                 />
             </View>
             {focused && (
-                <Text 
-                    numberOfLines={1} 
+                <Text
+                    numberOfLines={1}
                     className="text-white text-base font-semibold mt-2 w-16 text-center">
                     {title}
                 </Text>
