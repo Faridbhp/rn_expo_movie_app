@@ -1,4 +1,4 @@
-import { FlatList, Image, Text, View } from "react-native";
+import { Animated, Dimensions, FlatList, Image, Text, View } from "react-native";
 import "../global.css";
 import { useRouter } from "expo-router";
 import { images } from "@/constants/images";
@@ -8,10 +8,9 @@ import useFetch from "@/services/useFetch";
 import { fetchPopularMovies } from "@/services/api";
 import MovieCard from "../components/MovieCard";
 import { getTrendingMovies } from "@/services/appwrite";
-import TrendingCard from "../components/TrendingCard";
 import MovieCardSkeleton from "../components/MovieCard_Skeleton";
-import TrendingCardSkeleton from "../components/TrendingCard_Skeleton";
 import { useState } from "react";
+import TrendingSection from "../components/TrendingSection";
 
 export default function Index() {
     const router = useRouter();
@@ -122,51 +121,4 @@ export default function Index() {
     );
 }
 
-const TrendingSection = ({
-    data,
-    loading,
-    error,
-}: {
-    data: any[] | null | undefined;
-    loading: boolean;
-    error: Error | null;
-}) => (
-    <View>
-        <Text className="text-lg text-white font-bold mb-3">
-            Trending Movies
-        </Text>
 
-        <FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={() => <View className="w-5" />}
-            className="mb-4 mt-3"
-            data={loading ? Array(4).fill(null) : data}
-            renderItem={({ item, index }) =>
-                loading ? (
-                    <TrendingCardSkeleton index={index} />
-                ) : (
-                    <TrendingCard movie={item} index={index} />
-                )
-            }
-            keyExtractor={(item, index) =>
-                loading
-                    ? `skeletonHorizontal-${index}`
-                    : `${item.movie_id.toString()}-${item.searchTerm}`
-            }
-            ListEmptyComponent={
-                !error ? (
-                    <View className="mt-10 px-5">
-                        <Text className="text-center text-gray-500 text-xl">
-                            No movies found
-                        </Text>
-                    </View>
-                ) : (
-                    <Text className="text-lg text-red-500 text-center">
-                        Error: {error?.message}
-                    </Text>
-                )
-            }
-        />
-    </View>
-);
