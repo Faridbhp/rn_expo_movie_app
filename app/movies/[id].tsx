@@ -82,17 +82,17 @@ const MovieDetails = () => {
                         className="w-full h-[550px]"
                         resizeMode="stretch"
                     />
-                    <TouchableOpacity
-                        className="flex flex-1 items-end -mt-6 mr-5"
-                        onPress={() => saveData(!isSaved)}>
-                        <View className="bg-black items-center justify-center border-2  w-12 h-12 border-white rounded-md">
-                            <MaterialIcons
-                                name={isSaved ? `save-as` : `save-alt`}
-                                size={25}
-                                color="white"
-                            />
-                        </View>
-                    </TouchableOpacity>
+                    <View className="flex flex-1 items-end -mt-6 mr-5">
+                        <TouchableOpacity onPress={() => saveData(!isSaved)}>
+                            <View className="bg-black items-center justify-center border-2  w-12 h-12 border-white rounded-md">
+                                <MaterialIcons
+                                    name={isSaved ? `save-as` : `save-alt`}
+                                    size={25}
+                                    color="white"
+                                />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <View className="flex-col items-start justify-center mt-5 px-5">
                     <Text className="text-white font-bold text-xl">
