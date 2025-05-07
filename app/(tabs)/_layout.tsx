@@ -1,22 +1,31 @@
 import { View, Text, ImageBackground, Image } from "react-native";
 import React from "react";
 import { Tabs } from "expo-router";
-import { images } from "@/constants/images";
 import { icons } from "@/constants/icons";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 
 const TabIcon = ({ focused, icon, title }: any) => {
-
     return (
         <View className="flex flex-col items-center justify-cente">
             <View
                 className={`rounded-full ${
                     focused ? "bg-purple-600" : "bg-transparent"
                 } p-2 items-center justify-center`}>
-                <Image
+                <View
+                    className={`${
+                        focused ? "size-8" : "size-6"
+                    } items-center justify-center`}>
+                    <FontAwesome5
+                        name={icon}
+                        size={focused ? 20 : 18}
+                        color={focused ? "#fff" : "#A8B5DB"}
+                    />
+                </View>
+                {/* <Image
                     source={icon}
                     tintColor={focused ? "#fff" : "#A8B5DB"}
-                    className={`${focused ? "size-8" : "size-5"}`}
-                />
+                    className={focused ? "size-8" : "size-5"}
+                /> */}
             </View>
             {focused && (
                 <Text
@@ -55,11 +64,7 @@ const _Layout = () => {
                     title: "News",
                     headerShown: false,
                     tabBarIcon: ({ focused }) => (
-                        <TabIcon
-                            focused={focused}
-                            icon={icons.home}
-                            title="News"
-                        />
+                        <TabIcon focused={focused} icon="home" title="Home" />
                     ),
                 }}
             />
@@ -71,7 +76,7 @@ const _Layout = () => {
                     tabBarIcon: ({ focused }) => (
                         <TabIcon
                             focused={focused}
-                            icon={icons.search}
+                            icon="search"
                             title="Search"
                         />
                     ),
@@ -83,24 +88,20 @@ const _Layout = () => {
                     title: "Saved",
                     headerShown: false,
                     tabBarIcon: ({ focused }) => (
-                        <TabIcon
-                            focused={focused}
-                            icon={icons.save}
-                            title="Saved"
-                        />
+                        <TabIcon focused={focused} icon="book" title="Saved" />
                     ),
                 }}
             />
             <Tabs.Screen
-                name="profile"
+                name="history"
                 options={{
-                    title: "Profile",
+                    title: "History",
                     headerShown: false,
                     tabBarIcon: ({ focused }) => (
                         <TabIcon
                             focused={focused}
-                            icon={icons.person}
-                            title="Profile"
+                            icon="history"
+                            title="History"
                         />
                     ),
                 }}

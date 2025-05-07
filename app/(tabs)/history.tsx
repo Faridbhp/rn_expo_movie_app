@@ -7,9 +7,9 @@ import useFetch from "@/services/useFetch";
 import { deleteHistoryMovie, getAllHistoryMovies } from "@/services/appwrite";
 import HistoryCard from "../components/HistoryCard";
 import { getDeviceId } from "@/utils/device";
-import { usePathname } from "expo-router";
+import { router, usePathname } from "expo-router";
 
-const Profile = () => {
+const History = () => {
     const pathname = usePathname();
     const deviceId = getDeviceId();
 
@@ -33,6 +33,12 @@ const Profile = () => {
         loadHistory();
     };
 
+    const handleClickGear = () => {
+        // Handle click event here
+        console.log("Clicked");
+        router.push('/other-pages/profile');
+    }
+
     return (
         <View className="flex-1 bg-primary">
             <Image source={images.bg} className="absolute w-full z-0" />
@@ -49,7 +55,9 @@ const Profile = () => {
                     </Text>
                 </View>
                 <View className="flex flex-1 items-end ">
-                    <FontAwesome6 name="gear" size={24} color="white" />
+                    <TouchableOpacity onPress={handleClickGear}>
+                        <FontAwesome6 name="gear" size={24} color="white" />
+                    </TouchableOpacity>
                 </View>
             </View>
             <View className="flex-1 px-5">
@@ -80,4 +88,4 @@ const Profile = () => {
     );
 };
 
-export default Profile;
+export default History;
