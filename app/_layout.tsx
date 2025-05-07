@@ -16,6 +16,10 @@ export default function RootLayout() {
                         name="movies/[id]"
                         options={{ headerShown: false }}
                     />
+                    <Stack.Screen
+                        name="other-pages"
+                        options={{ headerShown: false }}
+                    />
                 </Stack>
             </SafeAreaView>
         </SafeAreaProvider>
