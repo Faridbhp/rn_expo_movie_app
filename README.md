@@ -51,3 +51,17 @@ Join our community of developers creating universal apps.
 
 ## Yang perlu di perhatikan
 1. Gunakan node version 18+
+
+
+## untuk membuat keystore
+keytool -genkey -v -keystore <nama_berkas>.keystore -alias <alias_kunci> -keyalg RSA -keysize 2048 -validity <jumlah_hari>
+
+example:
+keytool -genkey -v -keystore my-app-key.keystore -alias my-app-alias -keyalg RSA -keysize 2048 -validity 10000
+
+untuk mendapatkan sha1
+keytool -list -v -keystore <nama_berkas>.keystore -alias <alias_kunci>
+example:
+keytool -list -v -keystore my-app-key.keystore -alias my-app-alias
+
+key movieflix
