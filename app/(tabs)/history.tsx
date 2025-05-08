@@ -8,6 +8,7 @@ import { deleteHistoryMovie, getAllHistoryMovies } from "@/services/appwrite";
 import HistoryCard from "../components/HistoryCard";
 import { getDeviceId } from "@/utils/device";
 import { router, usePathname } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const History = () => {
     const pathname = usePathname();
@@ -33,11 +34,17 @@ const History = () => {
         loadHistory();
     };
 
-    const handleClickGear = () => {
+    const handleClickGear = async () => {
         // Handle click event here
-        console.log("Clicked");
-        router.push('/other-pages/profile');
-    }
+        const userId = await AsyncStorage.getItem("userUid");
+        // console.log("Clicked");
+        // console.log("userId", userId);
+        if (userId) {
+            router.push("/other-pages/profile");
+        } else {
+            router.push("/other-pages/loginPage");
+        }
+    };
 
     return (
         <View className="flex-1 bg-primary">
