@@ -1,16 +1,16 @@
 import { Animated, Dimensions, FlatList, Image, Text, View } from "react-native";
 import "../global.css";
 import { useRouter } from "expo-router";
-import { images } from "@/constants/images";
-import { icons } from "@/constants/icons";
-import SearchBar from "../components/SearchBar";
-import useFetch from "@/services/useFetch";
-import { fetchPopularMovies } from "@/services/api";
-import MovieCard from "../components/MovieCard";
-import { getTrendingMovies } from "@/services/appwrite";
-import MovieCardSkeleton from "../components/MovieCard_Skeleton";
+import { images } from "@/src/constants/images";
+import { icons } from "@/src/constants/icons";
+import SearchBar from "../../src/components/SearchBar";
+import useFetch from "@/src/services/useFetch";
+import { fetchPopularMovies } from "@/src/services/api";
+import MovieCard from "../../src/components/MovieCard";
+import { getTrendingMovies } from "@/src/services/appwrite";
+import MovieCardSkeleton from "../../src/components/MovieCard_Skeleton";
 import { useState } from "react";
-import TrendingSection from "../components/TrendingSection";
+import TrendingSection from "../../src/components/TrendingSection";
 
 export default function Index() {
     const router = useRouter();

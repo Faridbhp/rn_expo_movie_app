@@ -1,14 +1,14 @@
 import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
-import { images } from "@/constants/images";
+import { images } from "@/src/constants/images";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import useFetch from "@/services/useFetch";
-import { deleteHistoryMovie, getAllHistoryMovies } from "@/services/appwrite";
-import HistoryCard from "../components/HistoryCard";
-import { getDeviceId } from "@/utils/device";
+import useFetch from "@/src/services/useFetch";
+import { deleteHistoryMovie, getAllHistoryMovies } from "@/src/services/appwrite";
+import HistoryCard from "../../src/components/HistoryCard";
+import { getDeviceId } from "@/src/utils/device";
 import { router, usePathname } from "expo-router";
-import { useAppSelector } from "../store/hooks";
+import { useAppSelector } from "../../src/store/hooks";
 
 const History = () => {
     const pathname = usePathname();
@@ -40,9 +40,9 @@ const History = () => {
         const userId = user?.uid;
         // console.log("userId", user?.uid);
         if (userId) {
-            router.push("/other-pages/profile");
+            router.push("/(other-pages)/profile");
         } else {
-            router.push("/other-pages/loginPage");
+            router.push("/loginPage");
         }
     };
 

@@ -1,7 +1,7 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { images } from "@/constants/images";
+import { images } from "@/src/constants/images";
 
 const TrendingCardSkeleton = ({ index }: any) => {
   return (

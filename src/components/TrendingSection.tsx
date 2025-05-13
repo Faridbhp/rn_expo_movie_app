@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { FlatList, Text, View, Animated } from "react-native";
-import TrendingCard from "../components/TrendingCard";
-import TrendingCardSkeleton from "../components/TrendingCard_Skeleton";
+import TrendingCard from "./TrendingCard";
+import TrendingCardSkeleton from "./TrendingCard_Skeleton";
 
 const CARD_WIDTH = 220;
 const SCROLL_INTERVAL = 2000; // Interval waktu antar scroll

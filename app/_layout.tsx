@@ -1,13 +1,13 @@
 import {
     CheckIsMaintenance,
     ListenIsMaintenance,
-} from "@/helpers/firebase/maintenance";
+} from "@/src/helpers/firebase/maintenance";
 import { router, Stack } from "expo-router";
 import { useEffect } from "react";
 import { Alert, StatusBar } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Provider as StoreProvider } from "react-redux";
-import store from "./store/store";
+import store from "../src/store/store";
 
 export default function RootLayout() {
 
@@ -44,7 +44,11 @@ export default function RootLayout() {
                             options={{ headerShown: false }}
                         />
                         <Stack.Screen
-                            name="other-pages"
+                            name="(auth)"
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="(other-pages)"
                             options={{ headerShown: false }}
                         />
                     </Stack>

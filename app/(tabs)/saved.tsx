@@ -1,12 +1,12 @@
 import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
 import React, { useCallback, useEffect } from "react";
-import { icons } from "@/constants/icons";
+import { icons } from "@/src/constants/icons";
 import { useFocusEffect, usePathname } from "expo-router";
-import { getDeviceId } from "@/utils/device";
-import useFetch from "@/services/useFetch";
-import { deleteSaveMovie, getAllSavedData } from "@/services/appwrite";
-import { images } from "@/constants/images";
-import HistoryCard from "../components/HistoryCard";
+import { getDeviceId } from "@/src/utils/device";
+import useFetch from "@/src/services/useFetch";
+import { deleteSaveMovie, getAllSavedData } from "@/src/services/appwrite";
+import { images } from "@/src/constants/images";
+import HistoryCard from "../../src/components/HistoryCard";
 
 const Saved = () => {
     const pathname = usePathname();

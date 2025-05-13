@@ -8,13 +8,13 @@ import {
     Image,
     Modal,
 } from "react-native";
-import { getUserData } from "@/helpers/firebase/userProfile";
-import { loginUser } from "@/helpers/firebase/auth";
+import { getUserData } from "@/src/helpers/firebase/userProfile";
+import { loginUser } from "@/src/helpers/firebase/auth";
 import { router } from "expo-router";
-import { images } from "@/constants/images";
+import { images } from "@/src/constants/images";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useAppDispatch } from "../store/hooks";
-import { setUserData, UserData } from "../reducers/userData";
+import { useAppDispatch } from "../../src/store/hooks";
+import { setUserData, UserData } from "../../src/reducers/userData";
 
 const LoginScreen = () => {
     const dispatch = useAppDispatch();
@@ -146,7 +146,7 @@ const LoginScreen = () => {
 
                     <TouchableOpacity
                         onPress={() =>
-                            router.push("/other-pages/registerPage")
+                            router.push("/registerPage")
                         }>
                         <Text className="text-white text-center text-md">
                             Belum punya akun?{" "}

@@ -8,9 +8,9 @@ import {
     Alert,
     Image,
 } from "react-native";
-import { registerUser } from "@/helpers/firebase/auth";
+import { registerUser } from "@/src/helpers/firebase/auth";
 import { router } from "expo-router";
-import { images } from "@/constants/images";
+import { images } from "@/src/constants/images";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Modal } from "react-native";
 
@@ -63,7 +63,7 @@ const RegistrationScreen = () => {
             setShowModal(true);
             setTimeout(() => {
                 setShowModal(false);
-                router.replace("/other-pages/loginPage");
+                router.replace("/loginPage");
             }, 2500);
         }
     };
@@ -172,7 +172,7 @@ const RegistrationScreen = () => {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        onPress={() => router.push("/other-pages/loginPage")}>
+                        onPress={() => router.push("/loginPage")}>
                         <Text className="text-white text-center text-md">
                             Sudah punya akun?{" "}
                             <Text className="text-red-600 font-bold">

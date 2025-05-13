@@ -2,10 +2,11 @@ import { View, Text } from "react-native";
 import React, { useEffect } from "react";
 import { Tabs } from "expo-router";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { useAppDispatch } from "../store/hooks";
-import { setUserData, UserData } from "../reducers/userData";
+import { useAppDispatch } from "../../src/store/hooks";
+import { setUserData, UserData } from "../../src/reducers/userData";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, getUserData } from "@/helpers/firebase/firebaseConfig";
+import { auth } from "@/src/helpers/firebase/firebaseConfig";
+import { getUserData } from "@/src/helpers/firebase/userProfile";
 
 const TabIcon = ({ focused, icon, title }: any) => {
     return (

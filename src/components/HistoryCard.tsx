@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
-import { convertToLocalTime } from "@/utils/convertToLocalTime";
+import { convertToLocalTime } from "@/src/utils/convertToLocalTime";
 
 const HistoryCard = ({
     movie: { movie_id, poster_url, title, updated_at },

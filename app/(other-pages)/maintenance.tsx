@@ -1,4 +1,4 @@
-import { images } from "@/constants/images";
+import { images } from "@/src/constants/images";
 import { Image, Linking, StyleSheet, Text, View } from "react-native";
 
 const Maintenance = () => {

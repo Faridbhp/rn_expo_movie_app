@@ -1,4 +1,4 @@
-import { images } from "@/constants/images";
+import { images } from "@/src/constants/images";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -14,11 +14,11 @@ import {
 import {
     getUserData,
     updateUserProfile,
-} from "@/helpers/firebase/userProfile";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
+} from "@/src/helpers/firebase/userProfile";
+import { useAppDispatch, useAppSelector } from "../../src/store/hooks";
 import { useEffect, useState } from "react";
-import { setUserData, UserData } from "../reducers/userData";
-import { logoutUser } from "@/helpers/firebase/auth";
+import { setUserData, UserData } from "../../src/reducers/userData";
+import { logoutUser } from "@/src/helpers/firebase/auth";
 
 const Profile = () => {
     const user = useAppSelector((state) => state.user.userData);
@@ -36,7 +36,7 @@ const Profile = () => {
     const handleLogout = async () => {
         const isLogout = await logoutUser();
         if (isLogout.success) {
-            router.replace("/other-pages/loginPage");
+            router.replace("/loginPage");
         }
     };
 
