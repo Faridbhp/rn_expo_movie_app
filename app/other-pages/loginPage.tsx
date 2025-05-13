@@ -8,7 +8,8 @@ import {
     Image,
     Modal,
 } from "react-native";
-import { getUserData, loginUser } from "@/helpers/firebaseConfig";
+import { getUserData } from "@/helpers/firebase/userProfile";
+import { loginUser } from "@/helpers/firebase/auth";
 import { router } from "expo-router";
 import { images } from "@/constants/images";
 import FontAwesome from "@expo/vector-icons/FontAwesome";

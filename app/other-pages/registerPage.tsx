@@ -8,7 +8,7 @@ import {
     Alert,
     Image,
 } from "react-native";
-import { registerUser } from "@/helpers/firebaseConfig";
+import { registerUser } from "@/helpers/firebase/auth";
 import { router } from "expo-router";
 import { images } from "@/constants/images";
 import FontAwesome from "@expo/vector-icons/FontAwesome";

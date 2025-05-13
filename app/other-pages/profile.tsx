@@ -13,12 +13,12 @@ import {
 } from "react-native";
 import {
     getUserData,
-    logoutUser,
     updateUserProfile,
-} from "@/helpers/firebaseConfig";
+} from "@/helpers/firebase/userProfile";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { useEffect, useState } from "react";
 import { setUserData, UserData } from "../reducers/userData";
+import { logoutUser } from "@/helpers/firebase/auth";
 
 const Profile = () => {
     const user = useAppSelector((state) => state.user.userData);
@@ -46,7 +46,7 @@ const Profile = () => {
             email,
             phoneNumber,
         };
-        
+
         const id = user?.uid ?? "";
         if (!userName || !email || !phoneNumber) {
             console.error("All fields are required");

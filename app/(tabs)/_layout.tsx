@@ -5,7 +5,7 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useAppDispatch } from "../store/hooks";
 import { setUserData, UserData } from "../reducers/userData";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, getUserData } from "@/helpers/firebaseConfig";
+import { auth, getUserData } from "@/helpers/firebase/firebaseConfig";
 
 const TabIcon = ({ focused, icon, title }: any) => {
     return (

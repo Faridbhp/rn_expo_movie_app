@@ -1,7 +1,7 @@
 import {
     CheckIsMaintenance,
     ListenIsMaintenance,
-} from "@/helpers/firebaseConfig";
+} from "@/helpers/firebase/maintenance";
 import { router, Stack } from "expo-router";
 import { useEffect } from "react";
 import { Alert, StatusBar } from "react-native";
