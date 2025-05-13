@@ -8,11 +8,12 @@ import { deleteHistoryMovie, getAllHistoryMovies } from "@/services/appwrite";
 import HistoryCard from "../components/HistoryCard";
 import { getDeviceId } from "@/utils/device";
 import { router, usePathname } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAppSelector } from "../store/hooks";
 
 const History = () => {
     const pathname = usePathname();
     const deviceId = getDeviceId();
+    const user = useAppSelector((state) => state.user.userData);
 
     const {
         data: historyData,
@@ -36,9 +37,8 @@ const History = () => {
 
     const handleClickGear = async () => {
         // Handle click event here
-        const userId = await AsyncStorage.getItem("userUid");
-        // console.log("Clicked");
-        // console.log("userId", userId);
+        const userId = user?.uid;
+        // console.log("userId", user?.uid);
         if (userId) {
             router.push("/other-pages/profile");
         } else {
@@ -55,10 +55,10 @@ const History = () => {
                 </View>
                 <View className="justify-center ml-2 ">
                     <Text className="text-white font-bold text-[20px]">
-                        Username
+                        {user?.name ?? "Username"}
                     </Text>
                     <Text className="text-white text-[14px]">
-                        user@gmail.com
+                        {user?.email ?? "user@gmail.com"}
                     </Text>
                 </View>
                 <View className="flex flex-1 items-end ">

@@ -8,12 +8,16 @@ import {
     Image,
     Modal,
 } from "react-native";
-import { loginUser } from "@/helpers/firebaseConfig";
+import { getUserData, loginUser } from "@/helpers/firebaseConfig";
 import { router } from "expo-router";
 import { images } from "@/constants/images";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useAppDispatch } from "../store/hooks";
+import { setUserData, UserData } from "../reducers/userData";
 
 const LoginScreen = () => {
+    const dispatch = useAppDispatch();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -23,40 +27,57 @@ const LoginScreen = () => {
     const [isSuccess, setIsSuccess] = useState(false);
 
     const handleLogin = async () => {
-        if (!email || !password) {
-            setErrorMessage("Email dan password harus diisi.");
-            return;
-        }
+        try {
+            if (!email || !password) {
+                setErrorMessage("Email dan password harus diisi.");
+                return;
+            }
 
-        const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-        if (!emailRegex.test(email)) {
-            setErrorMessage("Email tidak valid.");
-            return;
-        }
+            const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+            if (!emailRegex.test(email)) {
+                setErrorMessage("Email tidak valid.");
+                return;
+            }
 
-        setErrorMessage("");
+            setErrorMessage("");
 
-        const result = await loginUser(email, password);
+            const result = await loginUser(email, password);
 
-        if (result.error) {
-            setModalMessage("Password atau email anda salah!");
-            setIsSuccess(false);
-            setShowModal(true);
-            setErrorMessage(result.error);
-        } else {
+            if (result.error) {
+                setModalMessage("Password atau email anda salah!");
+                setIsSuccess(false);
+                setShowModal(true);
+                setErrorMessage(result.error);
+                return;
+            }
+
+            const uid = result.user?.uid;
+            const userData = await getUserData(uid);
+            console.log("userData", userData);
+
+            if (!userData?.data) {
+                setModalMessage("Gagal mendapatkan data pengguna.");
+                setIsSuccess(false);
+                setShowModal(true);
+                return;
+            }
+            dispatch(setUserData(userData.data as UserData));
+
             setModalMessage("Anda berhasil login!");
             setIsSuccess(true);
             setShowModal(true);
             setTimeout(() => {
                 setShowModal(false);
-                router.push("/(tabs)");
-            }, 2500);
+                router.replace("/(tabs)");
+            }, 500);
+        } catch (error) {
+            console.log("error", error);
         }
     };
 
     const handleClose = () => {
         setShowModal(false);
-        isSuccess && router.push("/(tabs)");
+        isSuccess && router.replace("/(tabs)");
     };
 
     return (
@@ -151,13 +172,15 @@ const LoginScreen = () => {
                         <Text className="text-white text-center mb-7 text-2xl font-medium">
                             {modalMessage}
                         </Text>
-                        <TouchableOpacity
-                            onPress={handleClose}
-                            className=" bg-red-600 px-4 py-3 rounded-lg">
-                            <Text className="text-white font-medium text-xl">
-                                Tutup
-                            </Text>
-                        </TouchableOpacity>
+                        {!isSuccess && (
+                            <TouchableOpacity
+                                onPress={handleClose}
+                                className=" bg-red-600 px-4 py-3 rounded-lg">
+                                <Text className="text-white font-medium text-xl">
+                                    Tutup
+                                </Text>
+                            </TouchableOpacity>
+                        )}
                     </View>
                 </View>
             </Modal>

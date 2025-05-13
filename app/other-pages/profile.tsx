@@ -3,13 +3,84 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
-import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+    Image,
+    ScrollView,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
+import {
+    getUserData,
+    logoutUser,
+    updateUserProfile,
+} from "@/helpers/firebaseConfig";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { useEffect, useState } from "react";
+import { setUserData, UserData } from "../reducers/userData";
 
 const Profile = () => {
+    const user = useAppSelector((state) => state.user.userData);
+    const [userName, setUserName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        setUserName(user?.name ?? "");
+        setEmail(user?.email ?? "");
+        setPhoneNumber(user?.phoneNumber ?? "");
+    }, [user]);
+
+    const handleLogout = async () => {
+        const isLogout = await logoutUser();
+        if (isLogout.success) {
+            router.replace("/other-pages/loginPage");
+        }
+    };
+
+    const handleUpdate = () => {
+        const userData = {
+            name: userName,
+            email,
+            phoneNumber,
+        };
+        
+        const id = user?.uid ?? "";
+        if (!userName || !email || !phoneNumber) {
+            console.error("All fields are required");
+            return;
+        }
+
+        updateUserProfile(userData)
+            .then(async (resp) => {
+                if (resp.success) {
+                    const userResponse = await getUserData(id);
+                    if (userResponse?.data) {
+                        dispatch(setUserData(userResponse.data as UserData));
+                    }
+                } else {
+                    console.error("Failed to update user profile");
+                }
+            })
+            .catch((error) => {
+                console.error("Error updating profile:", error);
+            })
+            .finally(() => router.back());
+    };
+
     return (
         <View className="flex-1 bg-primary">
             <Image source={images.bg} className="absolute w-full z-0" />
-            <View className="items-center mt-[50px] mb-[30px]">
+            <View className="flex items-end px-3 py-3">
+                <TouchableOpacity
+                    className="bg-red-600 rounded-lg p-3 w-20"
+                    onPress={handleLogout}>
+                    <Text className="text-white text-center">Logout</Text>
+                </TouchableOpacity>
+            </View>
+            <View className="items-center mt-[30px] mb-[30px]">
                 <View className="border-white border-2 rounded-full size-32 flex items-center justify-center">
                     <MaterialIcons name="people-alt" size={85} color="white" />
                     <View className="absolute right-[-20px] bottom-5">
@@ -23,9 +94,11 @@ const Profile = () => {
                     </View>
                 </View>
                 <Text className="text-white font-bold text-[20px] mt-2">
-                    Username
+                    {user?.name ?? "Username"}
                 </Text>
-                <Text className="text-white text-[14px]">phone number</Text>
+                <Text className="text-white text-[14px]">
+                    {user?.phoneNumber ?? "phone number"}
+                </Text>
             </View>
             <ScrollView className="bg-slate-200 flex-1">
                 <View className="px-8 pb-[80px]">
@@ -33,7 +106,12 @@ const Profile = () => {
                         <Text className="text-2xl font-bold mb-2">
                             Your Name
                         </Text>
-                        <TextInput placeholder="Name" className="text-lg" />
+                        <TextInput
+                            placeholder="Name"
+                            className="text-lg"
+                            onChangeText={setUserName}
+                            value={userName}
+                        />
                         <View className="h-[1px] bg-gray-700 w-full" />
                     </View>
                     <View className="mt-10">
@@ -43,6 +121,10 @@ const Profile = () => {
                         <TextInput
                             placeholder="email@gmail.com"
                             className="text-lg"
+                            onChangeText={setEmail}
+                            value={email}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
                         />
                         <View className="h-[1px] bg-gray-700 w-full" />
                     </View>
@@ -50,13 +132,19 @@ const Profile = () => {
                         <Text className="text-2xl font-bold mb-2">
                             Your Phone
                         </Text>
-                        <TextInput placeholder="+62.." className="text-lg" />
+                        <TextInput
+                            placeholder="+62.."
+                            className="text-lg"
+                            onChangeText={setPhoneNumber}
+                            value={phoneNumber}
+                            keyboardType="phone-pad"
+                        />
                         <View className="h-[1px] bg-gray-700 w-full" />
                     </View>
                     <View className="mt-[40px]">
                         <TouchableOpacity
                             className="bg-purple-950 rounded-lg p-3"
-                            onPress={() => router.back()}>
+                            onPress={handleUpdate}>
                             <Text className="text-white text-center text-lg font-bold">
                                 Update
                             </Text>

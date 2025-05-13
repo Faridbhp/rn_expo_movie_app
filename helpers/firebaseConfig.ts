@@ -3,9 +3,10 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue, get } from "firebase/database";
 import {
     createUserWithEmailAndPassword,
-    getAuth,
+    initializeAuth,
     signInWithEmailAndPassword,
     signOut,
+    getReactNativePersistence
 } from "firebase/auth";
 import {
     doc,
@@ -14,7 +15,8 @@ import {
     setDoc,
     updateDoc,
 } from "firebase/firestore";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -34,8 +36,13 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db_realtime = getDatabase(app);
-const auth = getAuth(app);
 const db_firestore = getFirestore(app);
+
+// Menginisialisasi Firebase Authentication dengan aplikasi Firebase yang sudah ada
+export const auth = initializeAuth(app, {
+  // Menentukan persistence untuk status otentikasi menggunakan AsyncStorage
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage), // AsyncStorage akan menyimpan status pengguna secara persisten
+});
 
 // Definisikan referensi database
 const Database_REF = process.env.EXPO_PUBLIC_FIREBASE_DATABASE_REF;
@@ -112,14 +119,14 @@ const loginUser = async (email: any, password: any) => {
             password
         );
         const { user } = userCredential;
-        if (user) {
-            const token = await user.getIdToken(); 
-            await AsyncStorage.setItem("userUid", user.uid);
-            await AsyncStorage.setItem("token", token);
-            return { user };
-        } else {
-            return { error: "Error during login" };
+
+        if (!user) {
+            return {
+                error: "Gagal mendapatkan informasi pengguna setelah login.",
+            };
         }
+
+        return { user };
     } catch (error) {
         console.error("Error during login:", error);
         return { error: "Error during login" };
