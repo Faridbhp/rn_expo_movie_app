@@ -1,10 +1,13 @@
 import {
     createUserWithEmailAndPassword,
+    sendSignInLinkToEmail,
     signInWithEmailAndPassword,
     signOut,
 } from "firebase/auth";
 import { auth, db_firestore } from "./firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Linking from "expo-linking";
 
 const registerUser = async (email: any, password: any, userData: any) => {
     try {
@@ -66,8 +69,33 @@ const logoutUser = async () => {
         return { success: true };
     } catch (error) {
         console.error("Error during logout:", error);
-        return { error };
+        return { success: false };
     }
 };
 
-export { registerUser, loginUser, logoutUser };
+const sendLoginEmailLink = async (
+  email: string
+): Promise<{ success: boolean; message: string }> => {
+  try {
+    const actionCodeSettings = {
+      url: Linking.createURL("/verify"), // → contoh: movies://verify
+      handleCodeInApp: true,
+    };
+
+    await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+    await AsyncStorage.setItem("emailForSignIn", email);
+
+    return {
+      success: true,
+      message: "Link login berhasil dikirim ke email.",
+    };
+  } catch (error: any) {
+    console.error("Gagal mengirim link login:", error);
+    return {
+      success: false,
+      message: error.message || "Gagal mengirim link login.",
+    };
+  }
+};
+
+export { registerUser, loginUser, logoutUser, sendLoginEmailLink };

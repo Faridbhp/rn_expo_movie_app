@@ -5,32 +5,24 @@ import {
     TextInput,
     TouchableOpacity,
     ImageBackground,
-    Image,
     Modal,
 } from "react-native";
-import { getUserData } from "@/src/helpers/firebase/userProfile";
-import { loginUser } from "@/src/helpers/firebase/auth";
+import { sendLoginEmailLink } from "@/src/helpers/firebase/auth";
 import { router } from "expo-router";
 import { images } from "@/src/constants/images";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useAppDispatch } from "../../src/store/hooks";
-import { setUserData, UserData } from "../../src/reducers/userData";
 
-const LoginScreen = () => {
-    const dispatch = useAppDispatch();
-
+const LoginGoogleScreen = () => {
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [modalMessage, setModalMessage] = useState("Akun anda gagal dibuat!");
+    const [modalMessage, setModalMessage] = useState("");
     const [isSuccess, setIsSuccess] = useState(false);
 
     const handleLogin = async () => {
         try {
-            if (!email || !password) {
-                setErrorMessage("Email dan password harus diisi.");
+            if (!email) {
+                setErrorMessage("Email harus diisi.");
                 return;
             }
 
@@ -42,34 +34,21 @@ const LoginScreen = () => {
 
             setErrorMessage("");
 
-            const result = await loginUser(email, password);
+            const result = await sendLoginEmailLink(email);
 
-            if (result.error) {
-                setModalMessage("Password atau email anda salah!");
+            if (!result.success) {
+                setModalMessage("email anda salah!");
                 setIsSuccess(false);
                 setShowModal(true);
-                setErrorMessage(result.error);
+                setErrorMessage(result.message);
                 return;
             }
 
-            const uid = result.user?.uid;
-            const userData = await getUserData(uid);
-            console.log("userData", userData);
-
-            if (!userData?.data) {
-                setModalMessage("Gagal mendapatkan data pengguna.");
-                setIsSuccess(false);
-                setShowModal(true);
-                return;
-            }
-            dispatch(setUserData(userData.data as UserData));
-
-            setModalMessage("Anda berhasil login!");
+            setModalMessage("Link terkirim ke email anda");
             setIsSuccess(true);
             setShowModal(true);
             setTimeout(() => {
                 setShowModal(false);
-                router.replace("/(tabs)");
             }, 500);
         } catch (error) {
             console.log("error", error);
@@ -102,34 +81,6 @@ const LoginScreen = () => {
                         autoCapitalize="none"
                     />
 
-                    <View className="relative">
-                        <TextInput
-                            className="h-14 border border-white/40 mb-4 px-4 rounded-md text-white bg-white/10 w-full"
-                            placeholder="Password"
-                            placeholderTextColor="#ccc"
-                            value={password}
-                            onChangeText={setPassword}
-                            secureTextEntry={!showPassword}
-                        />
-                        <TouchableOpacity
-                            onPress={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-3">
-                            {showPassword ? (
-                                <FontAwesome
-                                    name="eye-slash"
-                                    size={24}
-                                    color="#fff"
-                                />
-                            ) : (
-                                <FontAwesome
-                                    name="eye"
-                                    size={24}
-                                    color="#fff"
-                                />
-                            )}
-                        </TouchableOpacity>
-                    </View>
-
                     {errorMessage ? (
                         <Text className="text-red-500 mb-4 text-center">
                             {errorMessage}
@@ -144,15 +95,15 @@ const LoginScreen = () => {
                         </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity
-                        onPress={() => router.push("/loginGooglePage")}>
+                    <TouchableOpacity onPress={() => router.push("/loginPage")}>
                         <Text className="text-white text-center text-md">
                             Login dengan{" "}
                             <Text className="text-red-600 font-bold">
-                                Google Link
+                                Google
                             </Text>
                         </Text>
                     </TouchableOpacity>
+
                     <TouchableOpacity
                         onPress={() => router.push("/registerPage")}>
                         <Text className="text-white text-center text-md">
@@ -196,4 +147,4 @@ const LoginScreen = () => {
     );
 };
 
-export default LoginScreen;
+export default LoginGoogleScreen;

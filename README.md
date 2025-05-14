@@ -65,3 +65,6 @@ example:
 keytool -list -v -keystore my-app-key.keystore -alias my-app-alias
 
 key movieflix
+
+## Build APK
+- npm run build-preview-android
