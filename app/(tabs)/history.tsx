@@ -1,13 +1,16 @@
 import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { images } from "@/src/constants/images";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import useFetch from "@/src/services/useFetch";
-import { deleteHistoryMovie, getAllHistoryMovies } from "@/src/services/appwrite";
+import {
+    deleteHistoryMovie,
+    getAllHistoryMovies,
+} from "@/src/helpers/appwrite/historyMovies";
 import HistoryCard from "../../src/components/HistoryCard";
 import { getDeviceId } from "@/src/utils/device";
-import { router, usePathname } from "expo-router";
+import { router, useFocusEffect, usePathname } from "expo-router";
 import { useAppSelector } from "../../src/store/hooks";
 
 const History = () => {
@@ -22,17 +25,24 @@ const History = () => {
         refetch: loadHistory,
     } = useFetch(() =>
         getAllHistoryMovies({
-            query: String(deviceId),
+            device_id: String(deviceId),
+            uid: user?.uid ?? "",
         })
     );
 
-    useEffect(() => {
-        loadHistory();
-    }, [pathname]);
+    useFocusEffect(
+        useCallback(() => {
+            if (user?.uid) {
+                loadHistory();
+            }
+        }, [])
+    );
 
     const handleClear = async () => {
-        await deleteHistoryMovie(String(deviceId), 20);
-        loadHistory();
+        if (user?.uid) {
+            await deleteHistoryMovie(user?.uid, String(deviceId), 20);
+            loadHistory();
+        }
     };
 
     const handleClickGear = async () => {

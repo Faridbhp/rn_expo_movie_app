@@ -7,10 +7,10 @@ import { icons } from "@/src/constants/icons";
 import { getDeviceId } from "@/src/utils/device";
 import {
     getOneHistoryMovie,
-    savedMovie,
     updateHistoryMovie,
-} from "@/src/services/appwrite";
+} from "@/src/helpers/appwrite/historyMovies";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useAppSelector } from "@/src/store/hooks";
 
 interface MovieInfoProps {
     label: string;
@@ -29,6 +29,7 @@ const MovieInfo = ({ label, value }: MovieInfoProps) => (
 const MovieDetails = () => {
     const { id } = useLocalSearchParams();
     const deviceId = getDeviceId();
+    const user = useAppSelector((state) => state.user.userData);
 
     const { data: movie, loading } = useFetch(() =>
         fetchMovieDetails(id as string)
@@ -37,18 +38,8 @@ const MovieDetails = () => {
     const [isSaved, setIsSaved] = useState<Boolean>(false);
 
     const { data: dataAppwrite, loading: loadingOneHistory } = useFetch(() =>
-        getOneHistoryMovie({ deviceId: String(deviceId), movieId: String(id) })
+        getOneHistoryMovie({ deviceId: String(deviceId), movieId: String(id), uid: user?.uid ?? '' })
     );
-
-    useEffect(() => {
-        const updateMovieHistory = async () => {
-            if (!loadingOneHistory && id && movie) {
-                await updateHistoryMovie(String(id), String(deviceId), movie);
-            }
-        };
-
-        updateMovieHistory();
-    }, [loadingOneHistory, id, movie, deviceId]);
 
     useEffect(() => {
         if (!loadingOneHistory && dataAppwrite) {
@@ -58,9 +49,19 @@ const MovieDetails = () => {
     }, [dataAppwrite, loadingOneHistory]);
 
     const saveData = async (status: Boolean) => {
-        setIsSaved(status);
+        console.log("status", status);
+        if (!movie) {
+            console.log("Movie data is not available");
+            return;
+        }
+        if (!user) {
+            console.log("User not logged in");
+            return;
+        }
 
-        savedMovie(String(id), String(deviceId), status);
+        setIsSaved(status);
+        console.log(`movieId : ${String(id)} deviceId : ${String(deviceId)} userId : ${user.uid} status : ${status}`);
+        await updateHistoryMovie(String(id), String(deviceId), user.uid, status, movie);
     };
 
     if (loadingOneHistory) {

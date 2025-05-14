@@ -6,7 +6,7 @@ import useFetch from "@/src/services/useFetch";
 import { fetchPopularMovies } from "@/src/services/api";
 import { icons } from "@/src/constants/icons";
 import SearchBar from "../../src/components/SearchBar";
-import { updateSearchCount } from "@/src/services/appwrite";
+import { updateSearchCount } from "@/src/helpers/appwrite/movies";
 import MovieCardSkeleton from "../../src/components/MovieCard_Skeleton";
 
 const Search = () => {

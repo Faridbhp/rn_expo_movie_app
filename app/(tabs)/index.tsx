@@ -7,7 +7,7 @@ import SearchBar from "../../src/components/SearchBar";
 import useFetch from "@/src/services/useFetch";
 import { fetchPopularMovies } from "@/src/services/api";
 import MovieCard from "../../src/components/MovieCard";
-import { getTrendingMovies } from "@/src/services/appwrite";
+import { getTrendingMovies } from "@/src/helpers/appwrite/movies";
 import MovieCardSkeleton from "../../src/components/MovieCard_Skeleton";
 import { useState } from "react";
 import TrendingSection from "../../src/components/TrendingSection";

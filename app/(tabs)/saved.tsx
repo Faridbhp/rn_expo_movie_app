@@ -4,13 +4,18 @@ import { icons } from "@/src/constants/icons";
 import { useFocusEffect, usePathname } from "expo-router";
 import { getDeviceId } from "@/src/utils/device";
 import useFetch from "@/src/services/useFetch";
-import { deleteSaveMovie, getAllSavedData } from "@/src/services/appwrite";
+import {
+    deleteSaveMovie,
+    getAllSavedData,
+} from "@/src/helpers/appwrite/savedMovies";
 import { images } from "@/src/constants/images";
 import HistoryCard from "../../src/components/HistoryCard";
+import { useAppSelector } from "@/src/store/hooks";
 
 const Saved = () => {
     const pathname = usePathname();
     const deviceId = getDeviceId();
+    const user = useAppSelector((state) => state.user.userData);
 
     const {
         data: historyData,
@@ -19,20 +24,24 @@ const Saved = () => {
         refetch: loadHistory,
     } = useFetch(() =>
         getAllSavedData({
-            query: String(deviceId),
+            device_id: String(deviceId),
+            uid: user?.uid ?? "",
         })
     );
 
     useFocusEffect(
         useCallback(() => {
-            // console.log("path", pathname);
-            loadHistory();
+            if (user?.uid) {
+                loadHistory();
+            }
         }, [])
     );
 
     const handleClear = async () => {
-        await deleteSaveMovie(String(deviceId), 20);
-        loadHistory();
+        if (user?.uid) {
+            await deleteSaveMovie(user?.uid, String(deviceId), 20);
+            loadHistory();
+        }
     };
 
     return (
