@@ -15,12 +15,12 @@ export default function RootLayout() {
         CheckIsMaintenance().then((isMaintenance) => {
             if (isMaintenance) {
                 // Show maintenance screen
-                router.replace("/other-pages/maintenance");
+                router.replace("/(other-pages)/maintenance");
             }
         });
         ListenIsMaintenance(
             () => {
-                router.replace("/other-pages/maintenance");
+                router.replace("/(other-pages)/maintenance");
             },
             () => {
                 // Show home screen
